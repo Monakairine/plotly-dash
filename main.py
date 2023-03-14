@@ -36,12 +36,13 @@ app.layout = html.Div(children=[
         figure=fig
     ),
 
-    html.H3(children='''
-        Example 2: simple bar chart with a dropdown
-    '''),
+
 
 
     html.Div(children=[
+        html.H3(children='''
+        Example 2: simple bar chart with a dropdown
+    '''),
         html.Div([
              dcc.Dropdown(
                  df['Fruit'].unique(),
@@ -51,6 +52,23 @@ app.layout = html.Div(children=[
              ], style={'width': '48%', 'display': 'inline-block'}),
         html.Div(children=[
             dcc.Graph(id='example-graph-2', figure=fig)
+        ]),
+    ], style={'width': '50%', 'display': 'inline-block'}),
+
+    html.Div(children=[
+        html.H3(children='''
+        Example 3: simple bar chart with a radio select
+    '''),
+        html.Div([
+            dcc.RadioItems(
+                 df['City'].unique(),
+                 'SF',
+                 id='example3-radio-values',
+                 inline=True
+                 )
+        ], style={'width': '48%', 'display': 'inline-block'}),
+        html.Div(children=[
+            dcc.Graph(id='example-graph-3', figure=fig)
         ]),
     ], style={'width': '50%', 'display': 'inline-block'}),
 
@@ -122,6 +140,16 @@ app.layout = html.Div(children=[
 )
 def filter_fruit(fruit):
     dff = df[df['Fruit'] == fruit]
+    fig = px.bar(dff, x="Fruit", y="Amount", color="City", barmode="group")
+    return fig
+
+
+@app.callback(
+    Output('example-graph-3', 'figure'),
+    Input('example3-radio-values', 'value')
+)
+def filter_fruit(city):
+    dff = df[df['City'] == city]
     fig = px.bar(dff, x="Fruit", y="Amount", color="City", barmode="group")
     return fig
 
