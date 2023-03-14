@@ -17,14 +17,18 @@ df = pd.DataFrame({
 
 df2 = pd.read_csv('https://plotly.github.io/datasets/country_indicators.csv')
 
-
+#lista de figuras
 fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
 
 app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
+    html.H1(children='Charts examples in plotly'),
 
     html.Div(children='''
         Dash: A web application framework for your data.
+    '''),
+
+    html.H3(children='''
+        Example 1: simple bar chart
     '''),
 
     dcc.Graph(
@@ -32,20 +36,23 @@ app.layout = html.Div(children=[
         figure=fig
     ),
 
-    html.H2(children='''
-        Dash repetido
+    html.H3(children='''
+        Example 2: simple bar chart with a dropdown
     '''),
 
+
     html.Div(children=[
+        html.Div([
+             dcc.Dropdown(
+                 df['Fruit'].unique(),
+                 'Bananas',
+                 id='example2-dropdown-values'
+             ),
+             ], style={'width': '48%', 'display': 'inline-block'}),
         html.Div(children=[
-            html.Button(children='teste1'),
-            dcc.Graph(id='example-graph repetido', figure=fig)
-        ], style={'width': '50%', 'display': 'inline-block'}),
-        html.Div(children=[
-            html.Button(children='teste2'),
-            dcc.Graph(id='example-graph repetido', figure=fig)
-        ], style={'width': '50%', 'display': 'inline-block'}),
-    ], style={'display': 'flex', 'text-align': 'center'}),
+            dcc.Graph(id='example-graph-2', figure=fig)
+        ]),
+    ], style={'width': '50%', 'display': 'inline-block'}),
 
     html.Br(),
 
@@ -109,6 +116,30 @@ app.layout = html.Div(children=[
 
 ])
 
+@app.callback(
+    Output('example-graph-2', 'figure'),
+    Input('example2-dropdown-values', 'value')
+)
+def filter_fruit(fruit):
+    dff = df[df['Fruit'] == fruit]
+    fig = px.bar(dff, x="Fruit", y="Amount", color="City", barmode="group")
+    return fig
+
+
+@app.callback(
+    Output('square', 'children'),#id do que estou modificando e parâmetro ue quero que seja modificado
+    Output('cube', 'children'),
+    Output('twos', 'children'),
+    Output('threes', 'children'),
+    Output('x^x', 'children'),
+    Input('num-multi', 'value'))
+def callback_a(value):
+    value = 1 if value is None else int(value)
+    return value**2, value**3, 2**value, 3**value, value**value
+
+
+
+
 
 @app.callback(
     Output('indicator-graphic', 'figure'),
@@ -139,15 +170,6 @@ def update_graph(xaxis_column_name, yaxis_column_name,
     return fig
 
 
-@app.callback(
-    Output('square', 'children'),
-    Output('cube', 'children'),
-    Output('twos', 'children'),
-    Output('threes', 'children'),
-    Output('x^x', 'children'),
-    Input('num-multi', 'value'))
-def callback_a(x):
-    return x**2, x**3, 2**x, 3**x, x**x
 
 
 if __name__ == '__main__':
