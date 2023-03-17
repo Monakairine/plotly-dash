@@ -1,4 +1,4 @@
-from dash import Dash, html, dcc, Input, Output
+from dash import Dash, html, dcc, Input, Output, State
 import plotly.express as px
 import pandas as pd
 from datetime import datetime, timedelta, date
@@ -97,7 +97,36 @@ app.layout = html.Div(children=[
         figure=fig2
     ),
 
+
+    html.H3(children='''
+        Example 5: text input
+    '''),
+
+    html.Div(children='''
+        Enter text to add a new div:
+    '''),
+
+    dcc.Input(id='example5-input', value='', type='text'),
+
+    html.Div(id='example5-output'),
+
 ])
+
+
+@app.callback(
+    Output('example5-output', 'children'),
+    Input('example5-input', 'value'),
+    State('example5-output', 'children')
+)
+def add_div(value, existing_children):
+
+    existing_children = html.Div()
+    if value:
+        new_child = html.Div(children=value)
+        children = [new_child] + existing_children
+        return children
+    else:
+        return existing_children
 
 
 @app.callback(
