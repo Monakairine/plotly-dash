@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, date
 import random
 
 app = Dash(__name__)
-
+server = app.server
 
 
 #lista de dataframes
