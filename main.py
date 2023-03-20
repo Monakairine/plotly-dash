@@ -4,9 +4,15 @@ import pandas as pd
 from datetime import datetime, timedelta, date
 import random
 import plotly.graph_objs as go
+# from flask import Flask, redirect, url_for, render_template_string
+# from flask_login import LoginManager
+# server = Flask(__name__)
+# server.secret_key = 'secretkey'
 
+# login_manager = LoginManager()
 app = Dash(__name__)
 server = app.server
+
 
 
 #lista de dataframes
@@ -185,8 +191,6 @@ def add_div(n_clicks, value, existing_children):
     if existing_children is None:
         existing_children = []
     if n_clicks and value:
-        print('entrou aqui')
-        print(existing_children)
         new_child = html.Div(children=value)
         children = [new_child]+existing_children
         return children
